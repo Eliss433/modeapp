@@ -10,13 +10,24 @@
 docker compose -f infrastructure/docker/docker-compose.yml up -d
 
 ### Start Backend 
-
+#### Linux
 cd backend
 ./mvnw spring-boot:run
 
+#### Windows
+
+cd backend
+.\mvnw.cmd spring-boot:run
+
 ### Start Frontend
 
+#### Linux
 cd frontend
 npm install
 npm run dev
 
+#### Windows
+
+cd frontend
+npm ci
+npm run dev
