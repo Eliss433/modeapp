@@ -1,3 +1,28 @@
+
+
+function App() {
+  return null;
+}
+
+export default App;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*
 import { useState } from 'react'
 import heroImg from './assets/hero.png'
 import reactLogo from './assets/react.svg'
@@ -120,3 +145,5 @@ function App() {
 }
 
 export default App
+
+ */
