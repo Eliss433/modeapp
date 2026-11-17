@@ -1,5 +1,5 @@
 
-package com.example.user;
+package com.example.backend.user;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;

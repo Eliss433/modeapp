@@ -1,7 +1,14 @@
+
 package com.example.backend.item;
 
+import com.example.backend.item.dto.ItemRequest;
+import com.example.backend.item.dto.ItemResponse;
 
+import jakarta.validation.Valid;
+
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 
 @RestController
@@ -14,38 +21,29 @@ public class ItemController {
         this.itemService = itemService;
     }
 
-    // Alle Items
-    @GetMapping
-    public List<Item> getAllItems() {
-        return itemService.getAllItems();
-    }
-
-    // Einzelnes Item
-    @GetMapping("/{id}")
-    public Item getItemById(@PathVariable Long id) {
-        return itemService.getItemById(id);
-    }
-
-    // Items eines Users
+    // Alle Items eines Users
     @GetMapping("/user/{userId}")
-    public List<Item> getItemsByUser(
+    public List<ItemResponse> getItemsByUser(
             @PathVariable Long userId) {
 
         return itemService.getItemsByUser(userId);
     }
 
-    // Neues Item erstellen
-    @PostMapping
-    public Item createItem(
-            @RequestBody Item item,
-            @RequestParam Long ownerId) {
+    // Einzelnes Item abrufen
+    @GetMapping("/{id}")
+    public ItemResponse getItemById(
+            @PathVariable Long id) {
 
-        return itemService.createItem(item, ownerId);
+        return itemService.getItemById(id);
     }
 
-    // Item löschen
-    @DeleteMapping("/{id}")
-    public void deleteItem(@PathVariable Long id) {
-        itemService.deleteItem(id);
+    // Neues Item erstellen
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public ItemResponse createItem(
+            @Valid @RequestBody ItemRequest request,
+            @RequestParam Long ownerId) {
+
+        return itemService.createItem(request, ownerId);
     }
 }

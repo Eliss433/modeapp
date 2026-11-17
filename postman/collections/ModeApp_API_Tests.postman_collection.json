@@ -1,0 +1,255 @@
+{
+  "info": {
+    "name": "ModeApp API Tests",
+    "description": "Testet die vorhandenen User- und Item-Endpunkte. Reihenfolge: User anlegen, User abrufen, Item anlegen, Items abrufen.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:8080"
+    },
+    {
+      "key": "ownerId",
+      "value": ""
+    },
+    {
+      "key": "itemId",
+      "value": ""
+    }
+  ],
+  "item": [
+    {
+      "name": "1 - User erstellen",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Status ist 200 OK', function () { pm.response.to.have.status(200); });",
+              "pm.test('Antwort enthält eine User-ID', function () {",
+              "    const data = pm.response.json();",
+              "    pm.expect(data.id).to.exist;",
+              "    pm.collectionVariables.set('ownerId', data.id);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"username\": \"testuser\",\n  \"mail\": \"testuser@example.com\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/users",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "users"
+          ]
+        }
+      }
+    },
+    {
+      "name": "2 - Alle User abrufen",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Status ist 200 OK', function () { pm.response.to.have.status(200); });",
+              "pm.test('Antwort ist eine Liste', function () { pm.expect(pm.response.json()).to.be.an('array'); });",
+              "pm.test('Testuser ist enthalten', function () {",
+              "    const users = pm.response.json();",
+              "    pm.expect(users.some(u => u.id == pm.collectionVariables.get('ownerId'))).to.eql(true);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/users",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "users"
+          ]
+        }
+      }
+    },
+    {
+      "name": "3 - Einzelnen User abrufen",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Status ist 200 OK', function () { pm.response.to.have.status(200); });",
+              "pm.test('User-ID stimmt', function () {",
+              "    pm.expect(pm.response.json().id).to.eql(Number(pm.collectionVariables.get('ownerId')));",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/users/{{ownerId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "users",
+            "{{ownerId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "4 - Item erstellen",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Status ist 201 Created', function () { pm.response.to.have.status(201); });",
+              "pm.test('Item-ID und ownerId sind vorhanden', function () {",
+              "    const data = pm.response.json();",
+              "    pm.expect(data.id).to.exist;",
+              "    pm.expect(data.ownerId).to.eql(Number(pm.collectionVariables.get('ownerId')));",
+              "    pm.collectionVariables.set('itemId', data.id);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Wei\\u00dfes T-Shirt\",\n  \"color\": \"Wei\\u00df\",\n  \"price\": 19.99,\n  \"description\": \"Ein schlichtes wei\\u00dfes T-Shirt als Testdatensatz.\",\n  \"category\": \"TOP\",\n  \"subCategory\": \"SHIRT\",\n  \"season\": \"ALL_SEASONS\",\n  \"occasion\": \"UNI\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{baseUrl}}/api/items?ownerId={{ownerId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "items"
+          ],
+          "query": [
+            {
+              "key": "ownerId",
+              "value": "{{ownerId}}"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "name": "5 - Items des Users abrufen",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Status ist 200 OK', function () { pm.response.to.have.status(200); });",
+              "pm.test('Antwort ist eine Liste und enthält das neue Item', function () {",
+              "    const items = pm.response.json();",
+              "    pm.expect(items).to.be.an('array');",
+              "    pm.expect(items.some(i => i.id == pm.collectionVariables.get('itemId'))).to.eql(true);",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/items/user/{{ownerId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "items",
+            "user",
+            "{{ownerId}}"
+          ]
+        }
+      }
+    },
+    {
+      "name": "6 - Einzelnes Item abrufen",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text",
+            "exec": [
+              "pm.test('Status ist 200 OK', function () { pm.response.to.have.status(200); });",
+              "pm.test('Item-Daten stimmen', function () {",
+              "    const data = pm.response.json();",
+              "    pm.expect(data.id).to.eql(Number(pm.collectionVariables.get('itemId')));",
+              "    pm.expect(data.name).to.eql('Weißes T-Shirt');",
+              "    pm.expect(data.category).to.eql('TOP');",
+              "});"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/api/items/{{itemId}}",
+          "host": [
+            "{{baseUrl}}"
+          ],
+          "path": [
+            "api",
+            "items",
+            "{{itemId}}"
+          ]
+        }
+      }
+    }
+  ]
+}
