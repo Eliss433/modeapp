@@ -1,0 +1,14 @@
+$kind: http-request
+url: "{{baseUrl}}/api/items/{{itemId}}"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status ist 200 OK', function () { pm.response.to.have.status(200); });
+      pm.test('Item-Daten stimmen', function () {
+          const data = pm.response.json();
+          pm.expect(data.id).to.eql(Number(pm.collectionVariables.get('itemId')));
+          pm.expect(data.name).to.eql('Weißes T-Shirt');
+          pm.expect(data.category).to.eql('TOP');
+      });
+order: 6000

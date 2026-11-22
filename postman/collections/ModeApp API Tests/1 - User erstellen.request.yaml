@@ -1,0 +1,22 @@
+$kind: http-request
+url: "{{baseUrl}}/api/users"
+method: POST
+headers:
+  Content-Type: application/json
+body:
+  type: json
+  content: |-
+    {
+      "username": "testuser",
+      "mail": "testuser@example.com"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status ist 200 OK', function () { pm.response.to.have.status(200); });
+      pm.test('Antwort enthält eine User-ID', function () {
+          const data = pm.response.json();
+          pm.expect(data.id).to.exist;
+          pm.collectionVariables.set('ownerId', data.id);
+      });
+order: 1000

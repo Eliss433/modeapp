@@ -1,0 +1,13 @@
+$kind: http-request
+url: "{{baseUrl}}/api/users"
+method: GET
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status ist 200 OK', function () { pm.response.to.have.status(200); });
+      pm.test('Antwort ist eine Liste', function () { pm.expect(pm.response.json()).to.be.an('array'); });
+      pm.test('Testuser ist enthalten', function () {
+          const users = pm.response.json();
+          pm.expect(users.some(u => u.id == pm.collectionVariables.get('ownerId'))).to.eql(true);
+      });
+order: 2000

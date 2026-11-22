@@ -1,0 +1,6 @@
+$kind: collection
+description: "Testet die vorhandenen User- und Item-Endpunkte. Reihenfolge: User anlegen, User abrufen, Item anlegen, Items abrufen."
+variables:
+  baseUrl: http://localhost:8080
+  ownerId: ""
+  itemId: ""
