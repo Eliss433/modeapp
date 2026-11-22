@@ -1,6 +1,4 @@
 package com.example.backend.item;
-
-
 public enum Season {
     SPRING,
     SUMMER,
@@ -9,4 +7,3 @@ public enum Season {
     ALL_SEASONS,
     MODERATE
 }
-

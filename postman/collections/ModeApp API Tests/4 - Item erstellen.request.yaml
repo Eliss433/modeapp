@@ -1,0 +1,31 @@
+$kind: http-request
+url: "{{baseUrl}}/api/items?ownerId={{ownerId}}"
+method: POST
+headers:
+  Content-Type: application/json
+queryParams:
+  ownerId: "{{ownerId}}"
+body:
+  type: json
+  content: |-
+    {
+      "name": "Wei\u00dfes T-Shirt",
+      "color": "Wei\u00df",
+      "price": 19.99,
+      "description": "Ein schlichtes wei\u00dfes T-Shirt als Testdatensatz.",
+      "category": "TOP",
+      "subCategory": "SHIRT",
+      "season": "ALL_SEASONS",
+      "occasion": "UNI"
+    }
+scripts:
+  - type: afterResponse
+    code: |-
+      pm.test('Status ist 201 Created', function () { pm.response.to.have.status(201); });
+      pm.test('Item-ID und ownerId sind vorhanden', function () {
+          const data = pm.response.json();
+          pm.expect(data.id).to.exist;
+          pm.expect(data.ownerId).to.eql(Number(pm.collectionVariables.get('ownerId')));
+          pm.collectionVariables.set('itemId', data.id);
+      });
+order: 4000
