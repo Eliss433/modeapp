@@ -8,8 +8,7 @@ export default function Header() {
 
                 <div className="navlinks">
                     <ul>
-                        <li><a href="#">Home</a></li>
-                        <li><a href="#">Dein Schrank</a></li>
+                        <li><a href="/">Home</a></li>                        <li><a href="#">Dein Schrank</a></li>
                         <li><a href="#">Vorschläge für Outfits</a></li>
                         <li><a href="#">Styl-Polizei</a></li>
                         <li><a href="#">eigene Kombi hinterlegen</a></li>
