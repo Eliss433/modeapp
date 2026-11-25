@@ -1,0 +1,13 @@
+createCombination()	Kombination erstellen
+getCombinationsByUser()	Alle Kombinationen eines Nutzers abrufen
+getCombinationById()	Einzelne Kombination abrufen
+updateCombination()	Kombination bearbeiten
+deleteCombination()	Kombination lösche
+
+
+
+PS C:\Users\eless\modeapp>
+docker compose -f infrastructure/docker/docker-compose.yml up -d
+docker ps
+cd backend
+.\mvnw.cmd spring-boot:run
